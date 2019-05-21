@@ -5,7 +5,8 @@ import * as firebase from 'firebase/app';
 })
 export class AuthenticationService {
 
-  constructor() { }
+  constructor() {
+   }
 
   registerUser(value){
     return new Promise<any>((resolve, reject) => {
@@ -39,7 +40,9 @@ export class AuthenticationService {
      })
    }
   
-   userDetails(){
-     return firebase.auth().currentUser;
+   async userDetails(){
+     var auth = await firebase.auth();
+     console.log("auth:",auth);
+     return auth.currentUser;
    }
 }

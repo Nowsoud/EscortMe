@@ -12,7 +12,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { environment } from 'src/environments/environment';
 import { AuthenticationService } from './services/authentication.service';
 import { AngularFireAuthModule } from '@angular/fire/auth';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import * as firebase from 'firebase';
+ 
+firebase.initializeApp(environment.firebase);
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -24,7 +26,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     StatusBar,
     SplashScreen,
     AuthenticationService,
-    ReactiveFormsModule,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
