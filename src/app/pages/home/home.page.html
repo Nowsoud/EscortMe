@@ -1,28 +1,14 @@
 <ion-header>
   <ion-toolbar>
+      <ion-buttons slot="end">
+          <ion-button (click)="onLogout()">
+            logout
+          </ion-button>
+        </ion-buttons>
     <ion-title>Dashboard</ion-title>
   </ion-toolbar>
 </ion-header>
  
 <ion-content padding>
- 
-  <ion-grid>
-    <ion-row>
-      <ion-col text-center>
         Welcome to Dashboard!
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col text-center>
-        Your Registered EmailID : {{userEmail}}
-      </ion-col>
-    </ion-row>
-  </ion-grid>  
-  
-  
 </ion-content>
-<ion-footer (click)="logout()">
-  <ion-toolbar color="secondary">
-    <ion-title>Log out</ion-title>
-  </ion-toolbar>
-</ion-footer>

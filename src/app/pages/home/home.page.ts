@@ -16,11 +16,11 @@ export class HomePage implements OnInit {
   ngOnInit() {
 
   }
-  logout(){
+  onLogout(){
     this.authService.logoutUser()
     .then(res => {
       console.log(res);
-      this.navCtrl.navigateBack('');
+      this.navCtrl.navigateRoot('login');
     })
     .catch(error => {
       console.log(error);

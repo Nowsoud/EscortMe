@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { NavController } from '@ionic/angular';
 import { AuthenticationService } from '../../services/authentication.service';
+import { ToastService } from 'src/app/servises/toast.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -15,6 +16,7 @@ export class LoginPage implements OnInit {
   constructor(
     private navCtrl: NavController,
     private authService: AuthenticationService,
+    private toast: ToastService,
     private formBuilder: FormBuilder) { }
 
   ngOnInit() {
@@ -44,11 +46,11 @@ export class LoginPage implements OnInit {
   loginUser(value){
     this.authService.loginUser(value)
     .then(res => {
-      console.log(res);
       this.errorMessage = "";
       this.navCtrl.navigateForward('/home');
     }, err => {
-      this.errorMessage = err.message;
+      this.toast.present(err.message);
+      this.errorMessage = err.message
     })
   }
   goToRegisterPage(){
