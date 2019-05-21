@@ -10,5 +10,30 @@
 </ion-header>
  
 <ion-content padding>
-        Welcome to Dashboard!
+    <ion-item >
+        <ion-label text-wrap>
+          <h3>{{userInfo?.name}}</h3>
+          <p>You are {{userInfo?.state}} now</p>
+        </ion-label>
+        <ion-avatar slot="start">
+            <img src="{{userInfo?.pic}}">
+        </ion-avatar>
+    </ion-item>
+    <ion-card>
+        <ion-card-content>
+          <img src="https://i.playground.ru/i/blog/215289/content/rtglbty1.png">
+          here sould be real map
+        </ion-card-content>
+    </ion-card>
+    <ion-list>
+        <ion-item *ngFor='let friend of (watchingFriends|async)'>
+            <ion-label text-wrap>
+              <h3>{{friend?.name}}</h3>
+              <p>Watching you now</p>
+            </ion-label>
+            <ion-avatar slot="start">
+                <img src="{{friend?.pic}}">
+            </ion-avatar>
+        </ion-item>
+    </ion-list>
 </ion-content>
