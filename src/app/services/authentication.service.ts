@@ -9,40 +9,15 @@ export class AuthenticationService {
    }
 
   registerUser(value){
-    return new Promise<any>((resolve, reject) => {
-      firebase.auth().createUserWithEmailAndPassword(value.email, value.password)
-      .then(
-        res => resolve(res),
-        err => reject(err))
-    })
+    return firebase.auth().createUserWithEmailAndPassword(value.email, value.password)
    }
   
    loginUser(value){
-    return new Promise<any>((resolve, reject) => {
-      firebase.auth().signInWithEmailAndPassword(value.email, value.password)
-      .then(
-        res => resolve(res),
-        err => reject(err))
-    })
+    return firebase.auth().signInWithEmailAndPassword(value.email, value.password)
    }
   
    logoutUser(){
-     return new Promise((resolve, reject) => {
-       if(firebase.auth().currentUser){
-         firebase.auth().signOut()
-         .then(() => {
-           console.log("LOG Out");
-           resolve();
-         }).catch((error) => {
-           reject();
-         });
-       }
-     })
+     return firebase.auth().signOut()
    }
-  
-   async userDetails(){
-     var auth = await firebase.auth();
-     console.log("auth:",auth);
-     return auth.currentUser;
-   }
+   
 }

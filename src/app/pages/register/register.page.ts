@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { AuthenticationService } from '../../services/authentication.service';
 import { NavController } from '@ionic/angular';
-import { ToastService } from 'src/app/servises/toast.service';
+import { ToastService } from '../../services/toast.service';
 @Component({
   selector: 'app-register',
   templateUrl: './register.page.html',
@@ -11,8 +11,6 @@ import { ToastService } from 'src/app/servises/toast.service';
 export class RegisterPage implements OnInit {
 
   validations_form: FormGroup;
-  errorMessage: string = '';
-  successMessage: string = '';
   validation_messages = {
     'email': [
       { type: 'required', message: 'Email is required.' },
@@ -52,7 +50,6 @@ export class RegisterPage implements OnInit {
         }, err => {
           this.toast.present(err.message);
         })
-
      }, err => {
        this.toast.present(err.message)
      })
