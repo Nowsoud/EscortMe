@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController, ModalController } from '@ionic/angular';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
+import { ToastService } from 'src/app/services/toast/toast.service';
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
@@ -10,7 +11,8 @@ export class HomePage implements OnInit {
   userEmail: string;
   constructor(
     private navCtrl: NavController,
-    private authService: AuthenticationService
+    private authService: AuthenticationService,
+    private toast:ToastService
   ) { }
 
   ngOnInit() {
@@ -18,12 +20,7 @@ export class HomePage implements OnInit {
   }
   onLogout(){
     this.authService.logoutUser()
-    .then(res => {
-      console.log(res);
-      this.navCtrl.navigateRoot('login');
-    })
-    .catch(error => {
-      console.log(error);
-    })
+    .then(res => this.navCtrl.navigateRoot('login'))
+    .catch(error => this.toast.present(error))
   }
 }
