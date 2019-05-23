@@ -12,16 +12,14 @@ export class UserService {
     pic:"https://upload.wikimedia.org/wikipedia/ru/c/c6/Jon_Snow_HBO.jpg",
     name:"Jon Snow",
     email:"king.on@wall.com",
-    state:"Crowing",
+    state:"walking",
     geo:{
       lat:0,
       lng:0
     }
   }
-
   constructor(private storage: Storage) { 
   }
-
   getUserInfo(){
     return new Promise((resolve, reject)=>{
       this.storage.get('userInfo').then(local_res=>
@@ -55,13 +53,10 @@ export class UserService {
       resolve(this.mock)
     });
   }
-  
   private updateUserInfo(userInfo){
     //TODO sync data on remote storage
     
     console.log("local store was updated");
     return this.storage.set('userInfo', userInfo);
   }
-
-
 }

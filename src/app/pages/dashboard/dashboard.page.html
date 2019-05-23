@@ -1,0 +1,33 @@
+<ion-header>
+
+</ion-header>
+ 
+<ion-content padding>
+    <ion-item >
+        <ion-label text-wrap>
+          <h3>{{userInfo?.name}}</h3>
+          <p>You are {{userInfo?.state}}</p>
+        </ion-label>
+        <ion-avatar slot="start">
+            <img src="{{userInfo?.pic}}">
+        </ion-avatar>
+        <ion-icon slot="end" *ngIf="userInfo?.state == 'walking'" name="walk"></ion-icon>
+        <ion-icon slot="end" *ngIf="userInfo?.state == 'standing'" name="body"></ion-icon>
+    </ion-item>
+    <ion-card>
+        <ion-card-content style="padding: 0">
+          <div id="map" style="height:50vh;"></div>
+        </ion-card-content>
+    </ion-card>
+    <ion-list>
+        <ion-item *ngFor='let friend of (watchingFriends|async)'>
+            <ion-label text-wrap>
+              <h3>{{friend?.name}}</h3>
+              <p>Watching you</p>
+            </ion-label>
+            <ion-avatar slot="start">
+                <img src="{{friend?.pic}}">
+            </ion-avatar>
+        </ion-item>
+    </ion-list>
+</ion-content>

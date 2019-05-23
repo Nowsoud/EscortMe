@@ -1,38 +1,21 @@
-<ion-header>
-  <ion-toolbar>
-      <ion-buttons slot="end">
-          <ion-button (click)="onLogout()">
-            logout
-          </ion-button>
-        </ion-buttons>
-    <ion-title>Dashboard</ion-title>
-  </ion-toolbar>
-</ion-header>
- 
-<ion-content padding>
-    <ion-item >
-        <ion-label text-wrap>
-          <h3>{{userInfo?.name}}</h3>
-          <p>You are {{userInfo?.state}}</p>
-        </ion-label>
-        <ion-avatar slot="start">
-            <img src="{{userInfo?.pic}}">
-        </ion-avatar>
-    </ion-item>
-    <ion-card>
-        <ion-card-content style="padding: 0">
-          <div id="map" style="height:50vh;"></div>
-        </ion-card-content>
-    </ion-card>
-    <ion-list>
-        <ion-item *ngFor='let friend of (watchingFriends|async)'>
-            <ion-label text-wrap>
-              <h3>{{friend?.name}}</h3>
-              <p>Watching you</p>
-            </ion-label>
-            <ion-avatar slot="start">
-                <img src="{{friend?.pic}}">
-            </ion-avatar>
-        </ion-item>
-    </ion-list>
-</ion-content>
+<ion-tabs>
+
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button tab="dashboard">
+      <ion-icon name="locate"></ion-icon>
+      <ion-label>Dashboard</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="friends">
+      <ion-icon name="people"></ion-icon>
+      <ion-label>Friends</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="settings">
+      <ion-icon name="settings"></ion-icon>
+      <ion-label>Settings</ion-label>
+    </ion-tab-button>
+
+  </ion-tab-bar>
+
+</ion-tabs>

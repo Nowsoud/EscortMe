@@ -9,8 +9,17 @@ import { HomePage } from './home.page';
 
 const routes: Routes = [
   {
-    path: '',
-    component: HomePage
+    path: 'home',
+    component: HomePage,
+    children:[
+      { path: 'dashboard', loadChildren: '../dashboard/dashboard.module#DashboardPageModule' },
+      { path: 'friends', loadChildren: '../friends/friends.module#FriendsPageModule' },
+      { path: 'settings', loadChildren: '../settings/settings.module#SettingsPageModule' }
+    ]
+  },
+  {
+    path:'',
+    redirectTo:"home/dashboard"
   }
 ];
 
