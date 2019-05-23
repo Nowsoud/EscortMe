@@ -13,12 +13,14 @@ export class UserService {
     email:"king.on@wall.com",
     state:"Crowing",
     geo:{
-      lat:19.08,
-      lon:50.08
+      lat:50.03,
+      lng:19.95
     }
   }
 
-  constructor(private storage: Storage) { }
+  constructor(private storage: Storage) { 
+    this.storage.remove('userInfo');
+  }
 
   private getDataFromRemoteStorage(){
     //TODO: get proper data from firestore

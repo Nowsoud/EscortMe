@@ -13,23 +13,22 @@
     <ion-item >
         <ion-label text-wrap>
           <h3>{{userInfo?.name}}</h3>
-          <p>You are {{userInfo?.state}} now</p>
+          <p>You are {{userInfo?.state}}</p>
         </ion-label>
         <ion-avatar slot="start">
             <img src="{{userInfo?.pic}}">
         </ion-avatar>
     </ion-item>
     <ion-card>
-        <ion-card-content>
-          <img src="https://i.playground.ru/i/blog/215289/content/rtglbty1.png">
-          here sould be real map
+        <ion-card-content style="padding: 0">
+          <div id="map" style="height:50vh;"></div>
         </ion-card-content>
     </ion-card>
     <ion-list>
         <ion-item *ngFor='let friend of (watchingFriends|async)'>
             <ion-label text-wrap>
               <h3>{{friend?.name}}</h3>
-              <p>Watching you now</p>
+              <p>Watching you</p>
             </ion-label>
             <ion-avatar slot="start">
                 <img src="{{friend?.pic}}">
