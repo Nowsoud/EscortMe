@@ -12,7 +12,7 @@ export class UserService {
     pic:"https://upload.wikimedia.org/wikipedia/ru/c/c6/Jon_Snow_HBO.jpg",
     name:"Jon Snow",
     email:"king.on@wall.com",
-    state:"Crowing",
+    state:"walking",
     geo:{
       lat:0,
       lng:0
