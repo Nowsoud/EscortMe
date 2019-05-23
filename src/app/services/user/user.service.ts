@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Storage } from '@ionic/storage';
 
 @Injectable({
   providedIn: 'root'
@@ -17,11 +18,37 @@ export class UserService {
     }
   }
 
-  constructor() { }
+  constructor(private storage: Storage) { }
 
-  getUserInfo(){
+  private getDataFromRemoteStorage(){
+    //TODO: get proper data from firestore
     return new Promise((resolve, reject)=>{
       resolve(this.mock)
     });
+  }
+  
+  getUserInfo(){
+    return new Promise((resolve, reject)=>{
+      this.storage.get('userInfo').then(local_res=>
+        {
+          if(local_res!=null){
+            console.log("user data comes from local store");
+            resolve(local_res)
+          }
+          else{
+            console.log("local store is empty");
+            this.getDataFromRemoteStorage().then(remote_res=>{
+              console.log("user data comes from remote store");
+              this.updateUserInfo(remote_res);
+              resolve(remote_res)
+            })
+          }
+        })
+    });
+  }
+
+  private updateUserInfo(userInfo){
+    this.storage.set('userInfo', userInfo);
+    console.log("local store was updated");
   }
 }

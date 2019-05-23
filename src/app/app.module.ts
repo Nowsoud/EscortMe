@@ -13,15 +13,19 @@ import { environment } from 'src/environments/environment';
 import { AuthenticationService } from './services/authentication/authentication.service';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import * as firebase from 'firebase';
- 
+
+import { IonicStorageModule } from '@ionic/storage';
+
 firebase.initializeApp(environment.firebase);
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [BrowserModule,
-     IonicModule.forRoot(),
+  imports: [
+      BrowserModule,
+      IonicModule.forRoot(),
       AppRoutingModule,
-      AngularFireAuthModule],
+      AngularFireAuthModule,
+      IonicStorageModule.forRoot()],
   providers: [
     StatusBar,
     SplashScreen,
