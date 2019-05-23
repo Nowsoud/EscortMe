@@ -18,8 +18,6 @@ export class DashboardPage implements OnInit {
   currentMarker: any;
   watchingFriends: any;
   constructor(
-    private navCtrl: NavController,
-    private authService: AuthenticationService,
     private userService: UserService,
     private friendsService: FriendsService,
     private toast:ToastService,
@@ -43,12 +41,6 @@ export class DashboardPage implements OnInit {
         });
       })
       .catch(err=>this.toast.present(err));
-  }
-  onLogout(){
-    this.authService.logoutUser()
-    .then(res => this.navCtrl.navigateRoot('login'))
-    .catch(error => this.toast.present(error))
-    this.userService.clearUserInfo();
   }
   Loadmap() {
     this.userService.getUserInfo().then(user=>{
@@ -74,8 +66,6 @@ export class DashboardPage implements OnInit {
   }
   
   ionViewWillEnter(){
-    if(this.map) 
-      this.map.remove();
     this.Loadmap()
     this.PointUserMarker()
   }
