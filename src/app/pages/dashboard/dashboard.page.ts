@@ -27,6 +27,7 @@ export class DashboardPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.watchingFriends = this.friendsService.getWatchingFriends();
     this.userService.getUserInfo()
       .then(res=>
       {
@@ -42,8 +43,6 @@ export class DashboardPage implements OnInit {
         });
       })
       .catch(err=>this.toast.present(err));
-    this.watchingFriends = this.friendsService.getWatchingFriends();
-    this.Loadmap()
   }
   onLogout(){
     this.authService.logoutUser()
@@ -71,6 +70,13 @@ export class DashboardPage implements OnInit {
     })
   }
   ionViewWillLeave() {
-    //this.map.remove();
+    this.map.remove();
+  }
+  
+  ionViewWillEnter(){
+    if(this.map) 
+      this.map.remove();
+    this.Loadmap()
+    this.PointUserMarker()
   }
 }

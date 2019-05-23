@@ -19,8 +19,8 @@ export class FriendsService {
       email:"dethkiller777@wall.com",
       state:"walking",
       geo:{
-        lat:19.09,
-        lon:50.09
+        lat:50.08,
+        lng:19.95
       }
     },
     {
@@ -31,7 +31,7 @@ export class FriendsService {
       state:"standing",
       geo:{
         lat:19.08,
-        lon:50.08
+        lng:50.08
       }
     }
   ]
@@ -44,6 +44,8 @@ export class FriendsService {
   }
 
   getByID(id){
-    return this.mock.filter(x=>x.id == id)[0]
+    return new Promise((resolve, reject)=>{
+      resolve(this.mock.filter(x=>x.id == id)[0])
+    });
   }
 }
