@@ -47,14 +47,16 @@ export class RegisterPage implements OnInit {
     this.authService.registerUser(value)
      .then(res => {
         // db.doc('/users/' + res.user.uid).set({
-        firebase.firestore().collection('users').doc('123').set({
+        firebase.firestore().collection('users').doc('serlox').set({
           // 'id': res.user.uid,
           // 'email': res.user.email,
           // 'state': 'hardcoded state'
           "test": 'test'
-        }).then(() => {
-
+        }).then((ress) => {
+          console.log(ress);
+          
         }, err => {
+          console.log(err);
           this.toast.present(err.message);
         })
         this.authService.loginUser(value)
