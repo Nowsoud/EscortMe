@@ -14,6 +14,7 @@ const routes: Routes = [
     children:[
       { path: 'dashboard', loadChildren: '../dashboard/dashboard.module#DashboardPageModule' },
       { path: 'friends', loadChildren: '../friends/friends.module#FriendsPageModule' },
+      { path: 'settings', loadChildren: '../settings/settings.module#SettingsPageModule' }
     ]
   },
   {

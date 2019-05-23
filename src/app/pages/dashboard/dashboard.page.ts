@@ -4,7 +4,7 @@ import { AuthenticationService } from '../../services/authentication/authenticat
 import { ToastService } from 'src/app/services/toast/toast.service';
 import { UserService } from 'src/app/services/user/user.service';
 import { FriendsService } from 'src/app/services/friends/friends.service';
-import { Map, latLng, tileLayer, Layer, marker } from 'leaflet';
+import { Map, latLng, tileLayer, Layer, marker, icon } from 'leaflet';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 @Component({
   selector: 'app-dashboard',
@@ -18,8 +18,6 @@ export class DashboardPage implements OnInit {
   currentMarker: any;
   watchingFriends: any;
   constructor(
-    private navCtrl: NavController,
-    private authService: AuthenticationService,
     private userService: UserService,
     private friendsService: FriendsService,
     private toast:ToastService,
@@ -44,12 +42,6 @@ export class DashboardPage implements OnInit {
       })
       .catch(err=>this.toast.present(err));
   }
-  onLogout(){
-    this.authService.logoutUser()
-    .then(res => this.navCtrl.navigateRoot('login'))
-    .catch(error => this.toast.present(error))
-    this.userService.clearUserInfo();
-  }
   Loadmap() {
     this.userService.getUserInfo().then(user=>{
       this.userInfo = user
@@ -62,8 +54,12 @@ export class DashboardPage implements OnInit {
     this.userService.getUserInfo().then(user=>{
       this.userInfo = user
       console.log("update geo: ",user);
-      
-      this.currentMarker = marker([this.userInfo.geo.lat, this.userInfo.geo.lng]);
+      var m_icon = icon({
+        iconUrl: "https://firebasestorage.googleapis.com/v0/b/escortme-2c3d1.appspot.com/o/ninja-portable.png?alt=media&token=6539eaca-592d-498a-a4ca-a2d8596d2db3",
+        iconSize:     [40, 40],
+        popupAnchor:  [3, -20]
+      });
+      this.currentMarker = marker([this.userInfo.geo.lat, this.userInfo.geo.lng],{icon: m_icon});
       this.currentMarker.addTo(this.map)
       .bindPopup(`<b>${this.userInfo.name}</b>  <p>${this.userInfo.state}</p>`)
       .openPopup();
@@ -74,8 +70,6 @@ export class DashboardPage implements OnInit {
   }
   
   ionViewWillEnter(){
-    if(this.map) 
-      this.map.remove();
     this.Loadmap()
     this.PointUserMarker()
   }
