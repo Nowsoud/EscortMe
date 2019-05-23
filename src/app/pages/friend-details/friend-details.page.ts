@@ -23,15 +23,12 @@ export class FriendDetailsPage implements OnInit {
     this.friendsService.getByID(this.id)
       .then(user=>this.userInfo = user)
       .catch(err=>this.toast.present(err));
-
-    this.Loadmap();
-    this.PointUserMarker()
   }
   Loadmap() {
     this.friendsService.getByID(this.id).then(user=>{
       
       this.userInfo = user
-      this.map = new Map('map').setView([this.userInfo.geo.lat, this.userInfo.geo.lng], 12);
+      this.map = new Map('fmap').setView([this.userInfo.geo.lat, this.userInfo.geo.lng], 12);
       tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {maxZoom: 18,}).addTo(this.map);
     })
   }

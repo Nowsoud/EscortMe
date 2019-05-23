@@ -8,7 +8,8 @@ const routes: Routes = [
   { path: 'home', loadChildren: './pages/home/home.module#HomePageModule', canActivate: [AuthGaurd] },
   
   { path: 'friend/:id', loadChildren: './pages/friend-details/friend-details.module#FriendDetailsPageModule' },
-  { path: 'register', loadChildren: './pages/register/register.module#RegisterPageModule' },
+  { path: 'register', loadChildren: './pages/register/register.module#RegisterPageModule' },  { path: 'settings', loadChildren: './pages/settings/settings.module#SettingsPageModule' },
+
 
 ];
 
