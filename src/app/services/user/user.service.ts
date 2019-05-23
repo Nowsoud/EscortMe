@@ -18,10 +18,8 @@ export class UserService {
       lng:0
     }
   }
-
   constructor(private storage: Storage) { 
   }
-
   getUserInfo(){
     return new Promise((resolve, reject)=>{
       this.storage.get('userInfo').then(local_res=>
@@ -55,13 +53,10 @@ export class UserService {
       resolve(this.mock)
     });
   }
-  
   private updateUserInfo(userInfo){
     //TODO sync data on remote storage
     
     console.log("local store was updated");
     return this.storage.set('userInfo', userInfo);
   }
-
-
 }
