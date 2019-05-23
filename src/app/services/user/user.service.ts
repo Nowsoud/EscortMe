@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
+import { Mock } from 'protractor/built/driverProviders';
 
 @Injectable({
   providedIn: 'root'
@@ -13,22 +14,14 @@ export class UserService {
     email:"king.on@wall.com",
     state:"Crowing",
     geo:{
-      lat:50.03,
-      lng:19.95
+      lat:0,
+      lng:0
     }
   }
 
   constructor(private storage: Storage) { 
-    this.storage.remove('userInfo');
   }
 
-  private getDataFromRemoteStorage(){
-    //TODO: get proper data from firestore
-    return new Promise((resolve, reject)=>{
-      resolve(this.mock)
-    });
-  }
-  
   getUserInfo(){
     return new Promise((resolve, reject)=>{
       this.storage.get('userInfo').then(local_res=>
@@ -48,9 +41,27 @@ export class UserService {
         })
     });
   }
-
-  private updateUserInfo(userInfo){
-    this.storage.set('userInfo', userInfo);
-    console.log("local store was updated");
+  clearUserInfo(){
+    this.storage.clear();
   }
+  updateUserGeo(geo:Float32List){
+    this.mock.geo.lat = geo[0]
+    this.mock.geo.lng = geo[1]
+    return this.updateUserInfo(this.mock)
+  }
+  private getDataFromRemoteStorage(){
+    //TODO: get proper data from firestore
+    return new Promise((resolve, reject)=>{
+      resolve(this.mock)
+    });
+  }
+  
+  private updateUserInfo(userInfo){
+    //TODO sync data on remote storage
+    
+    console.log("local store was updated");
+    return this.storage.set('userInfo', userInfo);
+  }
+
+
 }
