@@ -7,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FriendsPage implements OnInit {
 
+  friendList:any;
+
   constructor() { }
 
   ngOnInit() {
