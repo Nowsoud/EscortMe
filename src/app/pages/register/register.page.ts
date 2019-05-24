@@ -20,6 +20,9 @@ export class RegisterPage implements OnInit {
     'password': [
       { type: 'required', message: 'Password is required.' },
       { type: 'minlength', message: 'Password must be at least 5 characters long.' }
+    ],
+    'name': [
+      {type: 'required', message: 'Name is required.'}
     ]
   };
   constructor(
@@ -39,27 +42,31 @@ export class RegisterPage implements OnInit {
         Validators.minLength(5),
         Validators.required
       ])),
+      name: new FormControl('', Validators.required)
     });
   }
 
   tryRegister(value){
     this.authService.registerUser(value)
-     .then(res => {
-        firebase.firestore().doc('users/' + res.user.uid).set({
-          'id': res.user.uid,
-          'email': res.user.email,
-          'state': 'hardcoded state',
-          'name': 'name',
-          'geo': [50, 19],
-          'pic': 'https://user-images.githubusercontent.com/6009640/31679076-dc7581c6-b391-11e7-87fe-a8fa89793c63.png'
-        }).then(() => {
-          this.navCtrl.navigateRoot('home');          
-        }, err => {
-          console.log(err);
+      .then(res => {
+        Promise.all([
+          res.user.updateProfile({
+            displayName: value.name,
+            photoURL: 'https://user-images.githubusercontent.com/6009640/31679076-dc7581c6-b391-11e7-87fe-a8fa89793c63.png'
+          }),
+          firebase.firestore().doc('users/' + res.user.email).set({
+            'state': 'initial state',
+            'geo': [50, 19],
+          })
+        ])
+        .then(() => {
+          firebase.auth().currentUser.reload().then(() => 
+            this.navCtrl.navigateRoot('home')          
+          )
         })
-     }, err => {
-       this.toast.present(err.message)
-     })
+      }, err => {
+        console.log(err);
+      })
   }
  
   goLoginPage(){
