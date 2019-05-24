@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { Mock } from 'protractor/built/driverProviders';
-
+import * as firebase from 'firebase/app';
 @Injectable({
   providedIn: 'root'
 })
@@ -32,8 +32,14 @@ export class UserService {
             console.log("local store is empty");
             this.getDataFromRemoteStorage().then(remote_res=>{
               console.log("user data comes from remote store");
-              this.updateUserInfo(remote_res);
-              resolve(remote_res)
+              var userInfo = {
+                ...remote_res.data(),
+                pic: firebase.auth().currentUser.photoURL,
+                name: firebase.auth().currentUser.displayName,
+                email: firebase.auth().currentUser.email
+              }
+              this.updateUserInfo(userInfo);
+              resolve(userInfo)
             })
           }
         })
@@ -43,16 +49,20 @@ export class UserService {
     this.storage.clear();
   }
   updateUserGeo(geo:Float32List){
-    this.mock.geo.lat = geo[0]
-    this.mock.geo.lng = geo[1]
-    return this.updateUserInfo(this.mock)
+    this.storage.get('userInfo').then(local_res=>
+      {
+        local_res.geo = geo
+        this.updateUserInfo(local_res).catch(err => console.log(err))
+      })
+    return firebase.firestore().doc('users/' + firebase.auth().currentUser.email).update({
+      geo: geo
+    })
   }
+
   private getDataFromRemoteStorage(){
-    //TODO: get proper data from firestore
-    return new Promise((resolve, reject)=>{
-      resolve(this.mock)
-    });
+    return firebase.firestore().doc('users/' + firebase.auth().currentUser.email).get()
   }
+
   private updateUserInfo(userInfo){
     //TODO sync data on remote storage
     
