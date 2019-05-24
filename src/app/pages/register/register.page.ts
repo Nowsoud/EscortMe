@@ -65,7 +65,7 @@ export class RegisterPage implements OnInit {
           )
         })
       }, err => {
-        console.log(err);
+        this.toast.present(err.message)
       })
   }
  
