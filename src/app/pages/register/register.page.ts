@@ -56,7 +56,7 @@ export class RegisterPage implements OnInit {
           }),
           firebase.firestore().doc('users/' + res.user.email).set({
             'state': 'initial state',
-            'geo': [50, 19],
+            'geo': null
           })
         ])
         .then(() => {
