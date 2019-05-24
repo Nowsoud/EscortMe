@@ -8,7 +8,12 @@ import { Mock } from 'protractor/built/driverProviders';
 export class FriendsService {
 
   searchFriends(searchTerm: string){
-    return this.mock;
+    if (searchTerm != "") {
+      return this.mock.filter(item => item.name.toLowerCase().includes(searchTerm) || item.email.includes(searchTerm));
+    } else {
+      return this.mock
+    }
+    
   }
 
   mock:any=[
