@@ -45,7 +45,7 @@ export class DashboardPage implements OnInit {
   Loadmap() {
     this.userService.getUserInfo().then(user=>{
       this.userInfo = user
-      this.map = new Map('map').setView([this.userInfo.geo.lat, this.userInfo.geo.lng], 12);
+      this.map = new Map('map').setView(this.userInfo.geo, 12);
       tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', 
       {maxZoom: 18,}).addTo(this.map);
     })
@@ -59,7 +59,7 @@ export class DashboardPage implements OnInit {
         iconSize:     [40, 40],
         popupAnchor:  [3, -20]
       });
-      this.currentMarker = marker([this.userInfo.geo.lat, this.userInfo.geo.lng],{icon: m_icon});
+      this.currentMarker = marker(this.userInfo.geo,{icon: m_icon});
       this.currentMarker.addTo(this.map)
       .bindPopup(`<b>${this.userInfo.name}</b>  <p>${this.userInfo.state}</p>`)
       .openPopup();

@@ -4,7 +4,6 @@ import { AuthenticationService } from '../../services/authentication/authenticat
 import { NavController } from '@ionic/angular';
 import { ToastService } from '../../services/toast/toast.service';
 import * as firebase from 'firebase/app';
-
 @Component({
   selector: 'app-register',
   templateUrl: './register.page.html',
@@ -46,24 +45,17 @@ export class RegisterPage implements OnInit {
   tryRegister(value){
     this.authService.registerUser(value)
      .then(res => {
-        // db.doc('/users/' + res.user.uid).set({
-        firebase.firestore().collection('users').doc('serlox').set({
-          // 'id': res.user.uid,
-          // 'email': res.user.email,
-          // 'state': 'hardcoded state'
-          "test": 'test'
-        }).then((ress) => {
-          console.log(ress);
-          
+        firebase.firestore().doc('users/' + res.user.uid).set({
+          'id': res.user.uid,
+          'email': res.user.email,
+          'state': 'hardcoded state',
+          'name': 'name',
+          'geo': [50, 19],
+          'pic': 'https://user-images.githubusercontent.com/6009640/31679076-dc7581c6-b391-11e7-87fe-a8fa89793c63.png'
+        }).then(() => {
+          this.navCtrl.navigateRoot('home');          
         }, err => {
           console.log(err);
-          this.toast.present(err.message);
-        })
-        this.authService.loginUser(value)
-        .then(res => {
-          this.navCtrl.navigateRoot('home');
-        }, err => {
-          this.toast.present(err.message);
         })
      }, err => {
        this.toast.present(err.message)
