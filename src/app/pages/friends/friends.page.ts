@@ -19,6 +19,7 @@ export class FriendsPage implements OnInit {
   }
 
   searchChanged(){
+    
     this.result = this.friendsService.searchFriends(this.searchTerm)
   }
 }
