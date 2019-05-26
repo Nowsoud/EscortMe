@@ -34,5 +34,6 @@ export class FriendsPage implements OnInit {
          console.log('Error', err);
      });
     
+
   }
 }
