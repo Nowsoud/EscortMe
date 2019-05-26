@@ -17,12 +17,15 @@ import * as firebase from 'firebase';
 import { IonicStorageModule } from '@ionic/storage';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 
+import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
+import { QRCodeModule } from 'angularx-qrcode';
 import { DeviceMotion, DeviceMotionAccelerationData } from '@ionic-native/device-motion/ngx';
 firebase.initializeApp(environment.firebase);
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
   imports: [
+      QRCodeModule,
       BrowserModule,
       IonicModule.forRoot(),
       AppRoutingModule,
@@ -34,6 +37,7 @@ firebase.initializeApp(environment.firebase);
     AuthenticationService,
     Geolocation,
      DeviceMotion,
+     BarcodeScanner,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

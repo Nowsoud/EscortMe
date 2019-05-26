@@ -55,6 +55,7 @@ export class RegisterPage implements OnInit {
             photoURL: 'https://user-images.githubusercontent.com/6009640/31679076-dc7581c6-b391-11e7-87fe-a8fa89793c63.png'
           }),
           firebase.firestore().doc('users/' + res.user.email).set({
+            'id':firebase.auth().currentUser.uid,
             'state': 'initial state',
             'geo': null
           })
