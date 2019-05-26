@@ -17,6 +17,7 @@ import * as firebase from 'firebase';
 import { IonicStorageModule } from '@ionic/storage';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 
+import { DeviceMotion, DeviceMotionAccelerationData } from '@ionic-native/device-motion/ngx';
 firebase.initializeApp(environment.firebase);
 @NgModule({
   declarations: [AppComponent],
@@ -32,6 +33,7 @@ firebase.initializeApp(environment.firebase);
     SplashScreen,
     AuthenticationService,
     Geolocation,
+     DeviceMotion,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
