@@ -7,11 +7,6 @@ import { ToastService } from '../toast/toast.service';
   providedIn: 'root'
 })
 export class FriendsService {
-  addFriend(friendId: string) {
-    alert(friendId)
-    //TODO add friend
-  }
-
   mock:any=[
     {
       id:"sem1459",
