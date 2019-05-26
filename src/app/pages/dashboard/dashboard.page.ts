@@ -18,7 +18,7 @@ export class DashboardPage implements OnInit {
   map: Map;
   currentMarker: any;
   stateTest: string = "initial state";
-  motionCache: Array<number[]>;
+  motionCache: Array<number[]> = new Array<number[]>();
   watchingFriends: any;
   constructor(
     private userService: UserService,
@@ -50,7 +50,7 @@ export class DashboardPage implements OnInit {
           this.stateTest = data.x + " " + data.y + " " + data.z;
           this.motionCache.push([data.x,data.y,data.z]);
 
-          if(this.motionCache.length >= 100){
+          if(this.motionCache.length >= 8){
             
             //todo: compute state
             var state = "standing"

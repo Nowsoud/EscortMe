@@ -5,6 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
+import { QRCodeModule } from 'angularx-qrcode';
 import { SettingsPage } from './settings.page';
 
 const routes: Routes = [
@@ -18,6 +19,7 @@ const routes: Routes = [
   imports: [
     CommonModule,
     FormsModule,
+    QRCodeModule,
     IonicModule,
     RouterModule.forChild(routes)
   ],

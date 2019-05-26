@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 import { Mock } from 'protractor/built/driverProviders';
+import { ToastService } from '../toast/toast.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -9,13 +10,6 @@ export class FriendsService {
   addFriend(friendId: string) {
     alert(friendId)
     //TODO add friend
-  }
-
-  searchFriends(searchTerm: string){
-    if (searchTerm != "") 
-      return this.mock.filter(item => item.email.includes(searchTerm) || 
-                                      item.name.toLowerCase().includes(searchTerm));
-    return this.mock
   }
 
   mock:any=[
@@ -42,7 +36,19 @@ export class FriendsService {
       }
     }
   ]
-  constructor() { }
+  constructor(private toast:ToastService) { }
+
+  addFriend(friendId: string) {
+    this.toast.present(friendId)
+    //TODO add friend
+  }
+
+  searchFriends(searchTerm: string){
+    if (searchTerm != "") 
+      return this.mock.filter(item => item.email.includes(searchTerm) || 
+                                      item.name.toLowerCase().includes(searchTerm));
+    return this.mock
+  }
 
   getWatchingFriends(){
     return new Promise((resolve, reject)=>{
