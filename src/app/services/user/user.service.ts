@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
-import { Mock } from 'protractor/built/driverProviders';
 import * as firebase from 'firebase/app';
 @Injectable({
   providedIn: 'root'

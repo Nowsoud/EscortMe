@@ -10,6 +10,7 @@ export class FriendsPage implements OnInit {
 
   friendList:any;
   result:any;
+  friendId: string;
 
   searchTerm = ""
   constructor(private friendsService: FriendsService) { }
@@ -21,5 +22,9 @@ export class FriendsPage implements OnInit {
   searchChanged(){
     
     this.result = this.friendsService.searchFriends(this.searchTerm)
+  }
+
+  addFriend(){
+    this.friendsService.addFriend(this.friendId)
   }
 }

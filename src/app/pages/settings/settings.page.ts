@@ -3,6 +3,7 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 import { NavController } from '@ionic/angular';
 import { UserService } from 'src/app/services/user/user.service';
 import { ToastService } from 'src/app/services/toast/toast.service';
+import { userInfo } from 'os';
 
 @Component({
   selector: 'app-settings',
@@ -10,7 +11,7 @@ import { ToastService } from 'src/app/services/toast/toast.service';
   styleUrls: ['./settings.page.scss'],
 })
 export class SettingsPage implements OnInit {
-
+  userInfo: any;
   constructor(
     private userService: UserService,
     private toast:ToastService,
@@ -18,6 +19,7 @@ export class SettingsPage implements OnInit {
     private authService: AuthenticationService) { }
 
   ngOnInit() {
+    this.userService.getUserInfo().then(userInfo => this.userInfo = userInfo)
   }
   onLogout(){
     this.authService.logoutUser()

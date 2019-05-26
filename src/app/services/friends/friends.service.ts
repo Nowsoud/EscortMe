@@ -6,14 +6,16 @@ import { Mock } from 'protractor/built/driverProviders';
   providedIn: 'root'
 })
 export class FriendsService {
+  addFriend(friendId: string) {
+    alert(friendId)
+    //TODO add friend
+  }
 
   searchFriends(searchTerm: string){
-    if (searchTerm != "") {
-      return this.mock.filter(item => item.name.toLowerCase().includes(searchTerm) || item.email.includes(searchTerm));
-    } else {
-      return this.mock
-    }
-    
+    if (searchTerm != "") 
+      return this.mock.filter(item => item.email.includes(searchTerm) || 
+                                      item.name.toLowerCase().includes(searchTerm));
+    return this.mock
   }
 
   mock:any=[
