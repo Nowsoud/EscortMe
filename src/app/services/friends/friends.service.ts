@@ -4,6 +4,7 @@ import { UserService } from 'src/app/services/user/user.service';
 import { Observable } from 'rxjs';
 import { Mock } from 'protractor/built/driverProviders';
 import { ToastService } from '../toast/toast.service';
+import * as firebase from 'firebase/app';
 @Injectable({
   providedIn: 'root'
 })
@@ -18,7 +19,6 @@ export class FriendsService {
           this.userService.getCertainUserInfo(friendId)
         ))
         .then(data => {
-          console.log('freindInfo:' + data)
           this.storage.set('friendsInfo', data).then(() => resolve(data))
         })
       }, err => {
@@ -58,7 +58,30 @@ export class FriendsService {
 
   addFriend(friendId: string) {
     this.toast.present(friendId)
+    console.log('add friend method called')
     //TODO add friend
+    return new Promise((resolve, reject) => {
+      firebase.firestore().doc('users/' + firebase.auth().currentUser.uid).update({
+        friends: firebase.firestore.FieldValue.arrayUnion(friendId)
+      }).then(() => {
+        this.userService.updateCurrentUserFriends(friendId).then(() => {
+          this.storage.get('friendsInfo').then((info) => {
+            this.userService.getCertainUserInfo(friendId).then(data => {
+              info.unshift(data)
+              console.log(info)
+              this.storage.set('friendsInfo', info).then(() => {
+                console.log('friend added')
+                resolve()
+              })
+            })
+          })
+        })
+      }, err => {
+        console.log(err.message)
+        reject(err)
+      })
+    })
+    
   }
 
   searchFriends(searchTerm: string){

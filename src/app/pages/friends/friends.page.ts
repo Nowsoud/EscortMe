@@ -32,12 +32,12 @@ export class FriendsPage implements OnInit {
   }
 
   addFriend(){
-    this.barcodeScanner.scan().then(barcodeData => {
-      this.friendsService.addFriend(barcodeData.text)
-     }).catch(err => {
-         console.log('Error', err);
-     });
-    
+    // this.barcodeScanner.scan().then(barcodeData => {
+    //   this.friendsService.addFriend(barcodeData.text)
+    //  }).catch(err => {
+    //      console.log('Error', err);
+    //  });
+    this.friendsService.addFriend('odCNDJG1nXNNcHWiM6XSVtj28wM2').then(() => this.searchChanged())
 
   }
 }

@@ -20,7 +20,7 @@ export class UserService {
   constructor(private storage: Storage) { 
   }
   getUserInfo(){
-    return new Promise((resolve, reject)=>{
+    return new Promise<any>((resolve, reject)=>{
       this.storage.get('userInfo').then(local_res=>
         {
           if(local_res!=null){
@@ -46,6 +46,15 @@ export class UserService {
       firebase.firestore().doc('users/' + friendId).get().then(snapshot => 
         resolve(snapshot.data()),
       err => reject(err))
+    })
+  }
+
+  updateCurrentUserFriends(friendId) {
+    return new Promise((resolve, reject) => {
+      this.getUserInfo().then(local_res => {
+        local_res.friends.unshift(friendId)
+        this.updateUserInfo(local_res).then(() => resolve())
+      }).catch(err => console.log(err))
     })
   }
 
