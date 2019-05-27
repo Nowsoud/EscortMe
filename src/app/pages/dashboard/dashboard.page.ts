@@ -7,6 +7,8 @@ import { FriendsService } from 'src/app/services/friends/friends.service';
 import { Map, latLng, tileLayer, Layer, marker, icon } from 'leaflet';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { DeviceMotion, DeviceMotionAccelerationData } from '@ionic-native/device-motion/ngx';
+import { Storage } from '@ionic/storage';
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.page.html',
@@ -25,7 +27,8 @@ export class DashboardPage implements OnInit {
     private friendsService: FriendsService,
     private toast:ToastService,
     private geolocation: Geolocation,
-    private deviceMotion: DeviceMotion
+    private deviceMotion: DeviceMotion,
+    private storage: Storage
   ) { }
 
   ngOnInit() {
@@ -33,10 +36,7 @@ export class DashboardPage implements OnInit {
     this.userService.getUserInfo()
       .then(res=>
       {
-        this.userInfo = res
-
-
-
+        this.friendsService.downloadDetailedDataAboutFriendsToStore()
         this.geolocation.watchPosition().subscribe((data) => {
           if(data.coords){
               this.userService.updateUserGeo([data.coords.latitude, data.coords.longitude])
@@ -102,7 +102,9 @@ export class DashboardPage implements OnInit {
     this.PointUserMarker()
   }
 
-  ionViewDidEnter() {
-    // this.storage.
-  }
+  // ionViewDidEnter() {
+  //   this.storage.get('friendsInfo').then(info => {
+  //     if (info == null) this.friendsService.downloadDetailedDataAboutFriendsToStore()
+  //   })
+  // }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
-
+import { UserService } from 'src/app/services/user/user.service';
 import { Observable } from 'rxjs';
 import { Mock } from 'protractor/built/driverProviders';
 import { ToastService } from '../toast/toast.service';
@@ -11,14 +11,22 @@ export class FriendsService {
 
   
 
-  // fetchDetailedDataAboutFriends() {
-  //   return new Promise((resolve, reject) =>
-
-  //     this.storage.get('userInfo').then(info=>{
-
-  //     })
-  //   )
-  // }
+  downloadDetailedDataAboutFriendsToStore() {
+    return new Promise((resolve, reject) =>
+      this.storage.get('userInfo').then(info=>{
+        Promise.all(info.friends.map(friendEmail =>
+          this.userService.getCertainUserInfoFromRemote('users/' + friendEmail)
+        ))
+        .then(data => {
+          console.log('freindInfo:' + data)
+          this.storage.set('friendsInfo', data).then(() => resolve(data))
+        })
+      }, err => {
+        console.log(err)
+        reject(err)
+      })
+    )
+  }
 
   mock:any=[
     {
@@ -44,7 +52,9 @@ export class FriendsService {
       }
     }
   ]
-  constructor(private storage: Storage, private toast:ToastService) { }
+  constructor(private storage: Storage,
+              private toast:ToastService,
+              private userService: UserService) { }
 
   addFriend(friendId: string) {
     this.toast.present(friendId)
@@ -52,10 +62,14 @@ export class FriendsService {
   }
 
   searchFriends(searchTerm: string){
-    if (searchTerm != "") 
-      return this.mock.filter(item => item.email.includes(searchTerm) || 
-                                      item.name.toLowerCase().includes(searchTerm));
-    return this.mock
+    return new Promise((resolve, reject) => {
+      this.storage.get('friendsInfo').then(info => {
+        resolve (info.filter(item => item.email.includes(searchTerm) || 
+                                   item.name.toLowerCase().includes(searchTerm)))
+      }, err => reject(err))
+    })
+    
+    
   }
 
   getWatchingFriends(){

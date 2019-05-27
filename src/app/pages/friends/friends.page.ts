@@ -19,12 +19,16 @@ export class FriendsPage implements OnInit {
     private barcodeScanner: BarcodeScanner) { }
 
   ngOnInit() {
-    this.result = this.friendsService.searchFriends(this.searchTerm)
+    this.searchChanged()
   }
 
   searchChanged(){
     
-    this.result = this.friendsService.searchFriends(this.searchTerm)
+    this.friendsService.searchFriends(this.searchTerm).then((result) => {
+      this.result = result
+      console.log(this.result)
+    })
+    
   }
 
   addFriend(){

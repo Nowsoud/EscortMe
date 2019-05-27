@@ -31,14 +31,7 @@ export class UserService {
             console.log("local store is empty");
             this.getDataFromRemoteStorage().then(remote_res=>{
               console.log("user data comes from remote store");
-              var userInfo = {
-                ...remote_res.data(),
-                pic: firebase.auth().currentUser.photoURL,
-                name: firebase.auth().currentUser.displayName,
-                email: firebase.auth().currentUser.email
-              }
-              this.updateUserInfo(userInfo);
-              resolve(userInfo)
+              this.updateUserInfo(remote_res.data()).then(() => resolve(remote_res.data()));
             })
           }
         })
@@ -47,6 +40,15 @@ export class UserService {
   clearUserInfo(){
     this.storage.clear();
   }
+
+  getCertainUserInfoFromRemote(firestoreReference) {
+    return new Promise((resolve, reject) => {
+      firebase.firestore().doc(firestoreReference).get().then(snapshot => 
+        resolve(snapshot.data()),
+      err => reject(err))
+    })
+  }
+
   updateUserGeo(geo:Float32List){
     this.storage.get('userInfo').then(local_res=>
       {
@@ -78,4 +80,6 @@ export class UserService {
     console.log("local store was updated");
     return this.storage.set('userInfo', userInfo);
   }
+
+  
 }
