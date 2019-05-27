@@ -14,8 +14,8 @@ export class FriendsService {
   downloadDetailedDataAboutFriendsToStore() {
     return new Promise((resolve, reject) =>
       this.storage.get('userInfo').then(info=>{
-        Promise.all(info.friends.map(friendEmail =>
-          this.userService.getCertainUserInfoFromRemote('users/' + friendEmail)
+        Promise.all(info.friends.map(friendId =>
+          this.userService.getCertainUserInfo(friendId)
         ))
         .then(data => {
           console.log('freindInfo:' + data)

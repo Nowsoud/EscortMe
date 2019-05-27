@@ -101,10 +101,4 @@ export class DashboardPage implements OnInit {
     this.Loadmap()
     this.PointUserMarker()
   }
-
-  // ionViewDidEnter() {
-  //   this.storage.get('friendsInfo').then(info => {
-  //     if (info == null) this.friendsService.downloadDetailedDataAboutFriendsToStore()
-  //   })
-  // }
 }

@@ -41,9 +41,9 @@ export class UserService {
     this.storage.clear();
   }
 
-  getCertainUserInfoFromRemote(firestoreReference) {
+  getCertainUserInfo(friendId) {
     return new Promise((resolve, reject) => {
-      firebase.firestore().doc(firestoreReference).get().then(snapshot => 
+      firebase.firestore().doc('users/' + friendId).get().then(snapshot => 
         resolve(snapshot.data()),
       err => reject(err))
     })
@@ -55,7 +55,7 @@ export class UserService {
         local_res.geo = geo
         this.updateUserInfo(local_res).catch(err => console.log(err))
       })
-    return firebase.firestore().doc('users/' + firebase.auth().currentUser.email).update({
+    return firebase.firestore().doc('users/' + firebase.auth().currentUser.uid).update({
       geo: geo
     })
   }
@@ -66,12 +66,12 @@ export class UserService {
         local_res.state = state
         this.updateUserInfo(local_res).catch(err => console.log(err))
       })
-    return firebase.firestore().doc('users/' + firebase.auth().currentUser.email).update({
+    return firebase.firestore().doc('users/' + firebase.auth().currentUser.uid).update({
       state: state
     })
   }
   private getDataFromRemoteStorage(){
-    return firebase.firestore().doc('users/' + firebase.auth().currentUser.email).get()
+    return firebase.firestore().doc('users/' + firebase.auth().currentUser.uid).get()
   }
 
   private updateUserInfo(userInfo){
