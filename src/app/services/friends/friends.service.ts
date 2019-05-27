@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Storage } from '@ionic/storage';
 
 import { Observable } from 'rxjs';
 import { Mock } from 'protractor/built/driverProviders';
@@ -15,6 +16,15 @@ export class FriendsService {
     }
     
   }
+
+  // fetchDetailedDataAboutFriends() {
+  //   return new Promise((resolve, reject) =>
+
+  //     this.storage.get('userInfo').then(info=>{
+
+  //     })
+  //   )
+  // }
 
   mock:any=[
     {
@@ -40,7 +50,7 @@ export class FriendsService {
       }
     }
   ]
-  constructor() { }
+  constructor(private storage: Storage) { }
 
   getWatchingFriends(){
     return new Promise((resolve, reject)=>{

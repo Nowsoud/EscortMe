@@ -6,6 +6,7 @@ import { UserService } from 'src/app/services/user/user.service';
 import { FriendsService } from 'src/app/services/friends/friends.service';
 import { Map, latLng, tileLayer, Layer, marker, icon } from 'leaflet';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.page.html',
@@ -75,5 +76,9 @@ export class DashboardPage implements OnInit {
   ionViewWillEnter(){
     this.Loadmap()
     this.PointUserMarker()
+  }
+
+  ionViewDidEnter() {
+    // this.storage.
   }
 }
