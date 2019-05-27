@@ -6,7 +6,7 @@ import { UserService } from 'src/app/services/user/user.service';
 import { FriendsService } from 'src/app/services/friends/friends.service';
 import { Map, latLng, tileLayer, Layer, marker, icon } from 'leaflet';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
-
+import { DeviceMotion, DeviceMotionAccelerationData } from '@ionic-native/device-motion/ngx';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.page.html',
@@ -17,12 +17,15 @@ export class DashboardPage implements OnInit {
   userInfo: any;
   map: Map;
   currentMarker: any;
+  stateTest: string = "initial state";
+  motionCache: Array<number[]> = new Array<number[]>();
   watchingFriends: any;
   constructor(
     private userService: UserService,
     private friendsService: FriendsService,
     private toast:ToastService,
-    private geolocation: Geolocation
+    private geolocation: Geolocation,
+    private deviceMotion: DeviceMotion
   ) { }
 
   ngOnInit() {
@@ -31,8 +34,10 @@ export class DashboardPage implements OnInit {
       .then(res=>
       {
         this.userInfo = res
-        let watch = this.geolocation.watchPosition();
-        watch.subscribe((data) => {
+
+
+
+        this.geolocation.watchPosition().subscribe((data) => {
           if(data.coords){
               this.userService.updateUserGeo([data.coords.latitude, data.coords.longitude])
               .then(res=>this.PointUserMarker())
@@ -40,6 +45,25 @@ export class DashboardPage implements OnInit {
           }
           else console.log(data);
         });
+
+        this.deviceMotion.watchAcceleration({ frequency: 250 }).subscribe((data) => {
+          this.stateTest = data.x + " " + data.y + " " + data.z;
+          this.motionCache.push([data.x,data.y,data.z]);
+
+          if(this.motionCache.length >= 8){
+            
+            //todo: compute state
+            var state = "standing"
+
+            this.userService.updateUserState(state);
+            delete(this.motionCache)
+            this.motionCache = new Array<number[]>();
+          }
+
+        });
+
+
+
       })
       .catch(err=>this.toast.present(err));
   }

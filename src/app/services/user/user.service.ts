@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
-import { Mock } from 'protractor/built/driverProviders';
 import * as firebase from 'firebase/app';
 @Injectable({
   providedIn: 'root'
@@ -59,6 +58,16 @@ export class UserService {
     })
   }
 
+  updateUserState(state:string){
+    this.storage.get('userInfo').then(local_res=>
+      {
+        local_res.state = state
+        this.updateUserInfo(local_res).catch(err => console.log(err))
+      })
+    return firebase.firestore().doc('users/' + firebase.auth().currentUser.email).update({
+      state: state
+    })
+  }
   private getDataFromRemoteStorage(){
     return firebase.firestore().doc('users/' + firebase.auth().currentUser.email).get()
   }

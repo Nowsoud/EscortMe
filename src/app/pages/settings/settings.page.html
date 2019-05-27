@@ -10,5 +10,14 @@
 </ion-header>
 
 <ion-content>
-
+    <ion-item >
+        <ion-label text-wrap>
+          <h3>{{userInfo?.name}}</h3>
+          <p>Your friend id is {{userInfo?.id}}</p>
+        </ion-label>
+        <ion-avatar slot="start">
+            <img src="{{userInfo?.pic}}">
+        </ion-avatar>
+    </ion-item>
+    <qrcode [qrdata]="userInfo?.id" size="256" level="M"></qrcode>
 </ion-content>
