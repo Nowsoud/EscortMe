@@ -37,7 +37,8 @@ export class FriendsPage implements OnInit {
     //  }).catch(err => {
     //      console.log('Error', err);
     //  });
-    this.friendsService.addFriend('odCNDJG1nXNNcHWiM6XSVtj28wM2').then(() => this.searchChanged())
+    this.friendsService.addFriend(this.friendId).then(() => this.searchChanged())
+    this.friendId = ""
 
   }
 }
