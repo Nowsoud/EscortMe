@@ -36,7 +36,6 @@ export class DashboardPage implements OnInit {
     this.userService.getUserInfo()
       .then(res=>
       {
-        this.friendsService.downloadDetailedDataAboutFriendsToStore()
         this.geolocation.watchPosition().subscribe((data) => {
           if(data.coords){
               this.userService.updateUserGeo([data.coords.latitude, data.coords.longitude])
@@ -61,12 +60,10 @@ export class DashboardPage implements OnInit {
           }
 
         });
-
-
-
       })
       .catch(err=>this.toast.present(err));
   }
+  
   Loadmap() {
     this.userService.getUserInfo().then(user=>{
       this.userInfo = user
@@ -75,6 +72,7 @@ export class DashboardPage implements OnInit {
       {maxZoom: 18,}).addTo(this.map);
     })
   }
+
   PointUserMarker(){
     this.userService.getUserInfo().then(user=>{
       this.userInfo = user

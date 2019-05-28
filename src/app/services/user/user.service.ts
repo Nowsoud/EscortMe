@@ -53,8 +53,9 @@ export class UserService {
     return new Promise((resolve, reject) => {
       this.getUserInfo().then(local_res => {
         local_res.friends.unshift(friendId)
-        this.updateUserInfo(local_res).then(() => resolve())
-      }).catch(err => console.log(err))
+        this.updateUserInfo(local_res)
+        
+      })
     })
   }
 
@@ -75,18 +76,15 @@ export class UserService {
         local_res.state = state
         this.updateUserInfo(local_res).catch(err => console.log(err))
       })
-    return firebase.firestore().doc('users/' + firebase.auth().currentUser.uid).update({
-      state: state
-    })
+     return firebase.firestore()
+     .doc('users/' + firebase.auth().currentUser.uid)
+     .update({state: state})
   }
   private getDataFromRemoteStorage(){
     return firebase.firestore().doc('users/' + firebase.auth().currentUser.uid).get()
   }
 
   private updateUserInfo(userInfo){
-    //TODO sync data on remote storage
-    
-    console.log("local store was updated");
     return this.storage.set('userInfo', userInfo);
   }
 
