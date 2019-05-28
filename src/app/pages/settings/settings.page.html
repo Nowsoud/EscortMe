@@ -19,5 +19,8 @@
             <img src="{{userInfo?.pic}}">
         </ion-avatar>
     </ion-item>
-    <qrcode [qrdata]="userInfo?.id" size="256" level="M"></qrcode>
+    <div style="padding: 2px 20vw ">
+      <qrcode [qrdata]="userInfo?.id"  size="1024" level="M"></qrcode>
+    </div>
 </ion-content>
+
