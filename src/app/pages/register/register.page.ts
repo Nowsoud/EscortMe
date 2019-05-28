@@ -49,24 +49,20 @@ export class RegisterPage implements OnInit {
   tryRegister(value){
     this.authService.registerUser(value)
       .then(res => {
-        Promise.all([
-          res.user.updateProfile({
-            displayName: value.name,
-            photoURL: 'https://user-images.githubusercontent.com/6009640/31679076-dc7581c6-b391-11e7-87fe-a8fa89793c63.png'
-          }),
-          firebase.firestore().doc('users/' + res.user.email).set({
-            'id':firebase.auth().currentUser.uid,
-            'state': 'initial state',
-            'geo': null
-          })
-        ])
-        .then(() => {
-          firebase.auth().currentUser.reload().then(() => 
-            this.navCtrl.navigateRoot('home')          
-          )
+        firebase.firestore().doc('users/' + res.user.uid).set({
+          'id': res.user.uid,
+          'email': res.user.email,
+          'state': 'initial state',
+          'geo': null,
+          'friends': [],
+          "name": value.name,
+          "pic": 'https://user-images.githubusercontent.com/6009640/31679076-dc7581c6-b391-11e7-87fe-a8fa89793c63.png'
+        }).then(() => {
+          this.navCtrl.navigateRoot('home')
         })
       }, err => {
         this.toast.present(err.message)
+        console.log(err.message)
       })
   }
  

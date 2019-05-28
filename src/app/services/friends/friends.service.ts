@@ -1,12 +1,33 @@
 import { Injectable } from '@angular/core';
-
+import { Storage } from '@ionic/storage';
+import { UserService } from 'src/app/services/user/user.service';
 import { Observable } from 'rxjs';
 import { Mock } from 'protractor/built/driverProviders';
 import { ToastService } from '../toast/toast.service';
+import * as firebase from 'firebase/app';
 @Injectable({
   providedIn: 'root'
 })
 export class FriendsService {
+
+  
+
+  downloadDetailedDataAboutFriendsToStore() {
+    return new Promise((resolve, reject) =>
+      this.storage.get('userInfo').then(info=>{
+        Promise.all(info.friends.map(friendId =>
+          this.userService.getCertainUserInfo(friendId)
+        ))
+        .then(data => {
+          this.storage.set('friendsInfo', data).then(() => resolve(data))
+        })
+      }, err => {
+        console.log(err)
+        reject(err)
+      })
+    )
+  }
+
   mock:any=[
     {
       id:"sem1459",
@@ -31,18 +52,47 @@ export class FriendsService {
       }
     }
   ]
-  constructor(private toast:ToastService) { }
+  constructor(private storage: Storage,
+              private toast:ToastService,
+              private userService: UserService) { }
 
   addFriend(friendId: string) {
     this.toast.present(friendId)
+    console.log('add friend method called')
     //TODO add friend
+    return new Promise((resolve, reject) => {
+      firebase.firestore().doc('users/' + firebase.auth().currentUser.uid).update({
+        friends: firebase.firestore.FieldValue.arrayUnion(friendId)
+      }).then(() => {
+        this.userService.updateCurrentUserFriends(friendId).then(() => {
+          this.storage.get('friendsInfo').then((info) => {
+            this.userService.getCertainUserInfo(friendId).then(data => {
+              info.unshift(data)
+              console.log(info)
+              this.storage.set('friendsInfo', info).then(() => {
+                console.log('friend added')
+                resolve()
+              })
+            })
+          })
+        })
+      }, err => {
+        console.log(err.message)
+        reject(err)
+      })
+    })
+    
   }
 
   searchFriends(searchTerm: string){
-    if (searchTerm != "") 
-      return this.mock.filter(item => item.email.includes(searchTerm) || 
-                                      item.name.toLowerCase().includes(searchTerm));
-    return this.mock
+    return new Promise((resolve, reject) => {
+      this.storage.get('friendsInfo').then(info => {
+        resolve (info.filter(item => item.email.includes(searchTerm) || 
+                                   item.name.toLowerCase().includes(searchTerm)))
+      }, err => reject(err))
+    })
+    
+    
   }
 
   getWatchingFriends(){

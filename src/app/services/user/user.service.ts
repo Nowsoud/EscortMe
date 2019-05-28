@@ -20,7 +20,7 @@ export class UserService {
   constructor(private storage: Storage) { 
   }
   getUserInfo(){
-    return new Promise((resolve, reject)=>{
+    return new Promise<any>((resolve, reject)=>{
       this.storage.get('userInfo').then(local_res=>
         {
           if(local_res!=null){
@@ -31,14 +31,7 @@ export class UserService {
             console.log("local store is empty");
             this.getDataFromRemoteStorage().then(remote_res=>{
               console.log("user data comes from remote store");
-              var userInfo = {
-                ...remote_res.data(),
-                pic: firebase.auth().currentUser.photoURL,
-                name: firebase.auth().currentUser.displayName,
-                email: firebase.auth().currentUser.email
-              }
-              this.updateUserInfo(userInfo);
-              resolve(userInfo)
+              this.updateUserInfo(remote_res.data()).then(() => resolve(remote_res.data()));
             })
           }
         })
@@ -47,13 +40,31 @@ export class UserService {
   clearUserInfo(){
     this.storage.clear();
   }
+
+  getCertainUserInfo(friendId) {
+    return new Promise((resolve, reject) => {
+      firebase.firestore().doc('users/' + friendId).get().then(snapshot => 
+        resolve(snapshot.data()),
+      err => reject(err))
+    })
+  }
+
+  updateCurrentUserFriends(friendId) {
+    return new Promise((resolve, reject) => {
+      this.getUserInfo().then(local_res => {
+        local_res.friends.unshift(friendId)
+        this.updateUserInfo(local_res).then(() => resolve())
+      }).catch(err => console.log(err))
+    })
+  }
+
   updateUserGeo(geo:Float32List){
     this.storage.get('userInfo').then(local_res=>
       {
         local_res.geo = geo
         this.updateUserInfo(local_res).catch(err => console.log(err))
       })
-    return firebase.firestore().doc('users/' + firebase.auth().currentUser.email).update({
+    return firebase.firestore().doc('users/' + firebase.auth().currentUser.uid).update({
       geo: geo
     })
   }
@@ -64,12 +75,12 @@ export class UserService {
         local_res.state = state
         this.updateUserInfo(local_res).catch(err => console.log(err))
       })
-    return firebase.firestore().doc('users/' + firebase.auth().currentUser.email).update({
+    return firebase.firestore().doc('users/' + firebase.auth().currentUser.uid).update({
       state: state
     })
   }
   private getDataFromRemoteStorage(){
-    return firebase.firestore().doc('users/' + firebase.auth().currentUser.email).get()
+    return firebase.firestore().doc('users/' + firebase.auth().currentUser.uid).get()
   }
 
   private updateUserInfo(userInfo){
@@ -78,4 +89,6 @@ export class UserService {
     console.log("local store was updated");
     return this.storage.set('userInfo', userInfo);
   }
+
+  
 }
