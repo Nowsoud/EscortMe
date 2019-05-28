@@ -4,6 +4,7 @@ import { AuthenticationService } from '../../services/authentication/authenticat
 import { NavController } from '@ionic/angular';
 import { ToastService } from '../../services/toast/toast.service';
 import * as firebase from 'firebase/app';
+import { Storage } from '@ionic/storage';
 @Component({
   selector: 'app-register',
   templateUrl: './register.page.html',
@@ -29,7 +30,8 @@ export class RegisterPage implements OnInit {
     private navCtrl: NavController,
     private authService: AuthenticationService,
     private toast: ToastService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private storage:Storage
   ) { }
 
   ngOnInit() {
@@ -47,6 +49,7 @@ export class RegisterPage implements OnInit {
   }
 
   tryRegister(value){
+    this.storage.clear()
     this.authService.registerUser(value)
       .then(res => {
         firebase.firestore().doc('users/' + res.user.uid).set({

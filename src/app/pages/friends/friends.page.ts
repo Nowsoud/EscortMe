@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { FriendsService } from 'src/app/services/friends/friends.service';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { Platform } from '@ionic/angular';
+import { ToastService } from 'src/app/services/toast/toast.service';
 
 @Component({
   selector: 'app-friends',
@@ -19,17 +20,17 @@ export class FriendsPage implements OnInit {
   constructor(
     private friendsService: FriendsService,
     private barcodeScanner: BarcodeScanner,
+    private toast: ToastService,
     public platform: Platform) { }
 
   ngOnInit() {
-    this.searchChanged()
+    this.friendsService.downloadDetailedDataAboutFriendsToStore()
+    .then(()=>this.searchChanged())
   }
 
   searchChanged() {
     this.friendsService.searchFriends(this.searchTerm)
-    .then((result) => {
-      this.result = result
-    })
+    .then((result) => this.result = result)
   }
 
   addFriend() {
@@ -37,11 +38,11 @@ export class FriendsPage implements OnInit {
       this.barcodeScanner.scan().then(barcodeData => {
         this.friendsService.addFriend(barcodeData.text)
           .then(() => this.searchChanged())
-      }).catch(err => {
-        console.log('Error', err);
-      });
+          .catch(err => this.toast.present(err.message));
+      }).catch(err => this.toast.present(err.message));
     } else {
-      this.friendsService.addFriend(this.friendId).then(() => this.searchChanged())
+      this.friendsService.addFriend(this.friendId)
+      .then(() => this.searchChanged())
     }
   }
 }
