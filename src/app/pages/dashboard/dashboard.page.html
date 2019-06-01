@@ -2,8 +2,8 @@
 
 </ion-header>
  
-<ion-content padding>
-    <ion-item >
+<ion-content>
+    <ion-item size="4">
         <ion-label text-wrap>
           <h3>{{userInfo?.name}}</h3>
           <p>You are {{userInfo?.state}}</p>
@@ -13,10 +13,11 @@
         </ion-avatar>
         <ion-icon slot="end" *ngIf="userInfo?.state == 'walking'" name="walk"></ion-icon>
         <ion-icon slot="end" *ngIf="userInfo?.state == 'standing'" name="body"></ion-icon>
+        <ion-icon slot="end" *ngIf="userInfo?.state == 'activity'" name="pulse"></ion-icon>
+        <ion-icon slot="end" *ngIf="userInfo?.state == 'on table'" name="bed"></ion-icon>
     </ion-item>
-    <p style="font-size: 5px">{{stateTest}}</p>
-    <ion-card>
-        <ion-card-content style="padding: 0">
+    <ion-card size="4" > 
+        <ion-card-content style="padding: 0;">
           <div id="map" style="height:72vh;"></div>
         </ion-card-content>
     </ion-card>
