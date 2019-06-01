@@ -14,6 +14,7 @@ export class UserService {
     name: "Jon Snow",
     email: "king.on@wall.com",
     state: "walking",
+    security_status: "safe",
     geo: {
       lat: 0,
       lng: 0
@@ -67,6 +68,16 @@ export class UserService {
     })
     return firebase.firestore().doc('users/' + firebase.auth().currentUser.uid).update({
       geo: geo
+    })
+  }
+
+  updateUserSecurityStatus(status: string) {
+    this.storage.get('userInfo').then(local_res => {
+      local_res.security_status = status
+      this.updateUserInfo(local_res).catch(err => console.log(err))
+    })
+    return firebase.firestore().doc('users/' + firebase.auth().currentUser.uid).update({
+      security_status: status
     })
   }
 

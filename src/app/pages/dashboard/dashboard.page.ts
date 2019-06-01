@@ -51,6 +51,15 @@ export class DashboardPage implements OnInit {
     })
   }
 
+  OnDangerButtonClick(){
+    this.userInfo.security_status = 'danger'
+    this.userService.updateUserSecurityStatus('danger');
+  }
+  OnSafeButtonClick(){
+    this.userInfo.security_status = 'safe'
+    this.userService.updateUserSecurityStatus('safe');
+  }
+
   Loadmap() {
     return new Promise((resolve, reject) => {
       this.userService.getUserInfo().then(user => {
@@ -83,7 +92,6 @@ export class DashboardPage implements OnInit {
   ionViewWillLeave() {
     this.map.remove();
   }
-
   ionViewWillEnter() {
     this.Loadmap().then(() => this.PointUserMarker())
   }
