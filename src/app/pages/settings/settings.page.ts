@@ -11,6 +11,7 @@ import { ToastService } from 'src/app/services/toast/toast.service';
 })
 export class SettingsPage implements OnInit {
   userInfo: any;
+  qr_link:string;
   constructor(
     private userService: UserService,
     private toast:ToastService,
@@ -18,7 +19,11 @@ export class SettingsPage implements OnInit {
     private authService: AuthenticationService) { }
 
   ngOnInit() {
-    this.userService.getUserInfo().then(userInfo => this.userInfo = userInfo)
+    this.userService.getUserInfo()
+    .then(userInfo => {
+      this.userInfo = userInfo
+      this.qr_link = "https://api.qrserver.com/v1/create-qr-code/?size=500x500&data="+userInfo.id
+    })
   }
   onLogout(){
     this.authService.logoutUser()

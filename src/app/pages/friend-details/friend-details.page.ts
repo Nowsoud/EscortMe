@@ -45,19 +45,20 @@ export class FriendDetailsPage implements OnInit {
     }) 
   }
   PointUserMarker() {
+    
+    var m_icon = icon({
+      iconUrl: "https://firebasestorage.googleapis.com/v0/b/escortme-2c3d1.appspot.com/o/map_icon.png?alt=media&token=bbd4daaa-006e-4b2c-a01a-2fb631f0bced",
+      iconSize: [35, 35],
+      popupAnchor: [3, -20]
+    });
+
     if (this.userInfo) {
-      if (!this.currentMarker) {
-        var m_icon = icon({
-          iconUrl: "https://firebasestorage.googleapis.com/v0/b/escortme-2c3d1.appspot.com/o/ninja-portable.png?alt=media&token=6539eaca-592d-498a-a4ca-a2d8596d2db3",
-          iconSize: [40, 40],
-          popupAnchor: [3, -20]
-        });
+      if (!this.currentMarker) 
         this.currentMarker = marker(this.userInfo.geo, { icon: m_icon })
-        this.currentMarker.addTo(this.map)
-          .bindPopup(`<b>${this.userInfo.name}</b>  <p>${this.userInfo.state}</p>`);
-      }else{
+          .bindPopup(`<b>${this.userInfo.name}</b><p>${this.userInfo.state}</p>`);
+       else 
         this.currentMarker.setLatLng(this.userInfo.geo)
-      }
+        this.currentMarker.addTo(this.map)
     }
   }
   ionViewWillLeave() {

@@ -1,13 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, ModalController } from '@ionic/angular';
-import { AuthenticationService } from '../../services/authentication/authentication.service';
 import { ToastService } from 'src/app/services/toast/toast.service';
 import { UserService } from 'src/app/services/user/user.service';
-import { FriendsService } from 'src/app/services/friends/friends.service';
-import { Map, latLng, tileLayer, Layer, marker, icon } from 'leaflet';
+import {  Map, tileLayer, marker, icon } from 'leaflet';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
-import { DeviceMotion, DeviceMotionAccelerationData } from '@ionic-native/device-motion/ngx';
-import { Storage } from '@ionic/storage';
+import { StateMapperService } from 'src/app/services/stateMapper/state-mapper.service';
+import { RandomForest } from 'src/app/models/random-forest';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,86 +12,79 @@ import { Storage } from '@ionic/storage';
   styleUrls: ['./dashboard.page.scss'],
 })
 export class DashboardPage implements OnInit {
-
   userInfo: any;
   map: Map;
   currentMarker: any;
-  stateTest: string = "initial state";
-  motionCache: Array<number[]> = new Array<number[]>();
   watchingFriends: any;
   constructor(
     private userService: UserService,
-    private friendsService: FriendsService,
-    private toast:ToastService,
+    private toast: ToastService,
     private geolocation: Geolocation,
-    private deviceMotion: DeviceMotion,
-    private storage: Storage
+    private stateProvider: StateMapperService
   ) { }
 
   ngOnInit() {
     this.userService.getUserInfo()
-      .then(res=>
-      {
+      .then(res => {
         this.geolocation.watchPosition().subscribe((data) => {
-          if(data.coords){
-              this.userService.updateUserGeo([data.coords.latitude, data.coords.longitude])
-                .then(res=>this.PointUserMarker())
-                .catch(err=>this.toast.present(err))
+          if (data.coords) {
+            this.userService.updateUserGeo([data.coords.latitude, data.coords.longitude])
+              .then(res => this.PointUserMarker())
+              .catch(err => this.toast.present(err))
           }
           else console.log(data);
         });
-
-        this.deviceMotion.watchAcceleration({ frequency: 250 }).subscribe((data) => {
-          this.stateTest = data.x + " " + data.y + " " + data.z;
-          this.motionCache.push([data.x,data.y,data.z]);
-
-          if(this.motionCache.length >= 8){
-            
-            //todo: compute state
-            var state = "standing"
-
-            this.userService.updateUserState(state);
-            delete(this.motionCache)
-            this.motionCache = new Array<number[]>();
-          }
-
-        });
       })
-      .catch(err=>this.toast.present(err));
+      .catch(err => this.toast.present(err));
+
+    this.stateProvider.watchState().subscribe(data => {
+      let stateId = new RandomForest().predict(data);
+      let mapper = {
+        0: 'standing',
+        1: 'walking',
+        2: 'activity',
+        3: 'on table'
+      };
+      var state = mapper[stateId];
+      this.userInfo.state = state;
+      this.userService.updateUserState(state)
+    })
   }
-  
+
   Loadmap() {
-      return new Promise((resolve, reject)=>{
-        this.userService.getUserInfo().then(user => {
-          this.userInfo = user
-          this.map = new Map('map').setView(this.userInfo.geo, 12);
-          tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', 
+    return new Promise((resolve, reject) => {
+      this.userService.getUserInfo().then(user => {
+        this.userInfo = user
+        this.map = new Map('map').setView(this.userInfo.geo, 12);
+        tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
           { maxZoom: 18, }).addTo(this.map);
-          resolve()
-        })
-      }) 
+
+        resolve()
+      })
+    })
   }
   PointUserMarker() {
+
+    var m_icon = icon({
+      iconUrl: "https://firebasestorage.googleapis.com/v0/b/escortme-2c3d1.appspot.com/o/map_icon.png?alt=media&token=bbd4daaa-006e-4b2c-a01a-2fb631f0bced",
+      iconSize: [35, 35],
+      popupAnchor: [3, -20]
+    });
+
     if (this.userInfo) {
-      if (!this.currentMarker) {
-        var m_icon = icon({
-          iconUrl: "https://firebasestorage.googleapis.com/v0/b/escortme-2c3d1.appspot.com/o/ninja-portable.png?alt=media&token=6539eaca-592d-498a-a4ca-a2d8596d2db3",
-          iconSize: [40, 40],
-          popupAnchor: [3, -20]
-        });
+      if (!this.currentMarker)
         this.currentMarker = marker(this.userInfo.geo, { icon: m_icon })
-        this.currentMarker.addTo(this.map)
-          .bindPopup(`<b>${this.userInfo.name}</b>  <p>${this.userInfo.state}</p>`);
-      }else{
+          .bindPopup(`<b>${this.userInfo.name}</b><p>${this.userInfo.state}</p>`);
+      else
         this.currentMarker.setLatLng(this.userInfo.geo)
-      }
+      this.currentMarker.addTo(this.map)
     }
   }
   ionViewWillLeave() {
     this.map.remove();
   }
-  
-  ionViewWillEnter(){
-    this.Loadmap().then(()=>this.PointUserMarker())
+
+  ionViewWillEnter() {
+    this.Loadmap().then(() => this.PointUserMarker())
   }
 }

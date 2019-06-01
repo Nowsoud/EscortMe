@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 import { NavController } from '@ionic/angular';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 import { ToastService } from '../../services/toast/toast.service';
+import { Storage } from '@ionic/storage';
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -17,9 +18,11 @@ export class LoginPage implements OnInit {
     private navCtrl: NavController,
     private authService: AuthenticationService,
     private toast: ToastService,
-    private formBuilder: FormBuilder) { }
+    private formBuilder: FormBuilder,
+    private storage: Storage) { }
 
   ngOnInit() {
+    this.storage.clear()
     this.validations_form = this.formBuilder.group({
       email: new FormControl('', Validators.compose([
         Validators.required,
