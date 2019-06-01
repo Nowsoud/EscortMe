@@ -25,7 +25,7 @@ export class FriendDetailsPage implements OnInit {
     this.id = this.activatedRoute.snapshot.paramMap.get('id')
     this.friendsService.getByID(this.id)
       .then(user => {this.userInfo = user})
-      .catch(err => this.toast.present(err));
+      .catch(err => this.toast.present(err.message));
 
     this.userService.watchUser(this.id)
       .subscribe(user => {
