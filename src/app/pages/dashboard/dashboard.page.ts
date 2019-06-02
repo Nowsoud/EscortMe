@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastService } from 'src/app/services/toast/toast.service';
 import { UserService } from 'src/app/services/user/user.service';
-import {  Map, tileLayer, marker, icon } from 'leaflet';
+import { Map, tileLayer, marker, icon } from 'leaflet';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { StateMapperService } from 'src/app/services/stateMapper/state-mapper.service';
 import { RandomForest } from 'src/app/models/random-forest';
@@ -29,13 +29,18 @@ export class DashboardPage implements OnInit {
         this.geolocation.watchPosition().subscribe((data) => {
           if (data.coords) {
             this.userService.updateUserGeo([data.coords.latitude, data.coords.longitude])
-              .then(res => this.PointUserMarker())
-              .catch(err => this.toast.present(err))
+              .then(res => {
+                if (!this.map)
+                  this.Loadmap().then(() => this.PointUserMarker())
+                else
+                  this.PointUserMarker()
+              })
+              .catch(err => this.toast.present(err.message))
           }
           else console.log(data);
         });
       })
-      .catch(err => this.toast.present(err));
+      .catch(err => this.toast.present(err.message));
 
     this.stateProvider.watchState().subscribe(data => {
       let stateId = new RandomForest().predict(data);
@@ -49,6 +54,15 @@ export class DashboardPage implements OnInit {
       this.userInfo.state = state;
       this.userService.updateUserState(state)
     })
+  }
+
+  OnDangerButtonClick() {
+    this.userInfo.security_status = 'danger'
+    this.userService.updateUserSecurityStatus('danger');
+  }
+  OnSafeButtonClick() {
+    this.userInfo.security_status = 'safe'
+    this.userService.updateUserSecurityStatus('safe');
   }
 
   Loadmap() {
@@ -83,8 +97,8 @@ export class DashboardPage implements OnInit {
   ionViewWillLeave() {
     this.map.remove();
   }
-
   ionViewWillEnter() {
-    this.Loadmap().then(() => this.PointUserMarker())
+    if (this.userInfo && this.userInfo.geo)
+      this.Loadmap().then(() => this.PointUserMarker())
   }
 }

@@ -56,6 +56,7 @@ export class RegisterPage implements OnInit {
           'id': res.user.uid,
           'email': res.user.email,
           'state': 'initial state',
+          'security_status':'safe',
           'geo': null,
           'friends': [],
           "name": value.name,

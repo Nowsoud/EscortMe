@@ -28,7 +28,7 @@ export class SettingsPage implements OnInit {
   onLogout(){
     this.authService.logoutUser()
     .then(res => this.navCtrl.navigateRoot('login'))
-    .catch(error => this.toast.present(error))
+    .catch(error => this.toast.present(error.message))
     this.userService.clearUserInfo();
   }
 }

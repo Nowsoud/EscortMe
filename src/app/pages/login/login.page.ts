@@ -22,7 +22,6 @@ export class LoginPage implements OnInit {
     private storage: Storage) { }
 
   ngOnInit() {
-    this.storage.clear()
     this.validations_form = this.formBuilder.group({
       email: new FormControl('', Validators.compose([
         Validators.required,
