@@ -25,22 +25,17 @@ export class DashboardPage implements OnInit {
 
   ngOnInit() {
     this.userService.getUserInfo()
-      .then(res => {
-        this.geolocation.watchPosition().subscribe((data) => {
-          if (data.coords) {
-            this.userService.updateUserGeo([data.coords.latitude, data.coords.longitude])
-              .then(res => {
-                if (!this.map)
-                  this.Loadmap().then(() => this.PointUserMarker())
-                else
-                  this.PointUserMarker()
-              })
-              .catch(err => this.toast.present(err.message))
-          }
-          else console.log(data);
-        });
-      })
-      .catch(err => this.toast.present(err.message));
+      .then(user => this.userInfo = user).catch(err => this.toast.present(err.message));
+
+    this.geolocation.watchPosition().subscribe((data) => {
+      if (data.coords) {
+        let geo = [data.coords.latitude, data.coords.longitude]
+        this.PointUserMarker(geo)
+        this.userService.updateUserGeo(geo)
+      }else{
+        this.toast.present((data as any).message)
+      }
+    },error=>this.toast.present(error.message));
 
     this.stateProvider.watchState().subscribe(data => {
       let stateId = new RandomForest().predict(data);
@@ -56,6 +51,29 @@ export class DashboardPage implements OnInit {
     })
   }
 
+  Loadmap(geo) {
+    this.map = new Map('map').setView(geo, 12);
+    tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+	    maxZoom: 19,
+	    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a> hosted by <a href="https://openstreetmap.fr/" target="_blank">OpenStreetMap France</a>'
+      }).addTo(this.map);
+  }
+
+  PointUserMarker(geo) {
+    var m_icon = icon({
+      iconUrl: "https://firebasestorage.googleapis.com/v0/b/escortme-2c3d1.appspot.com/o/map_icon.png?alt=media&token=bbd4daaa-006e-4b2c-a01a-2fb631f0bced",
+      iconSize: [35, 35],
+      popupAnchor: [3, -20]
+    });
+
+    if (!this.currentMarker)
+      this.currentMarker = marker(geo, { icon: m_icon });
+    else
+      this.currentMarker.setLatLng(geo)
+
+    this.currentMarker.addTo(this.map)
+  }
+
   OnDangerButtonClick() {
     this.userInfo.security_status = 'danger'
     this.userService.updateUserSecurityStatus('danger');
@@ -65,40 +83,21 @@ export class DashboardPage implements OnInit {
     this.userService.updateUserSecurityStatus('safe');
   }
 
-  Loadmap() {
-    return new Promise((resolve, reject) => {
-      this.userService.getUserInfo().then(user => {
-        this.userInfo = user
-        this.map = new Map('map').setView(this.userInfo.geo, 12);
-        tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
-          { maxZoom: 18, }).addTo(this.map);
-
-        resolve()
-      })
-    })
-  }
-  PointUserMarker() {
-
-    var m_icon = icon({
-      iconUrl: "https://firebasestorage.googleapis.com/v0/b/escortme-2c3d1.appspot.com/o/map_icon.png?alt=media&token=bbd4daaa-006e-4b2c-a01a-2fb631f0bced",
-      iconSize: [35, 35],
-      popupAnchor: [3, -20]
-    });
-
-    if (this.userInfo) {
-      if (!this.currentMarker)
-        this.currentMarker = marker(this.userInfo.geo, { icon: m_icon })
-          .bindPopup(`<b>${this.userInfo.name}</b><p>${this.userInfo.state}</p>`);
-      else
-        this.currentMarker.setLatLng(this.userInfo.geo)
-      this.currentMarker.addTo(this.map)
-    }
-  }
-  ionViewWillLeave() {
-    this.map.remove();
-  }
   ionViewWillEnter() {
-    if (this.userInfo && this.userInfo.geo)
-      this.Loadmap().then(() => this.PointUserMarker())
+    this.updateMap()
+  }
+
+  updateMap() {
+    if (this.map)
+      this.map.remove()
+    this.userService.getUserInfo()
+      .then(user => {
+        if (user && user.geo) {
+          this.Loadmap(user.geo)
+          this.PointUserMarker(user.geo)
+        }
+        else
+          this.Loadmap([54, 19])
+      }).catch((err) => this.toast.present(err.message))
   }
 }

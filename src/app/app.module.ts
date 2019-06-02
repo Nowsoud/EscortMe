@@ -20,6 +20,7 @@ import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { QRCodeModule } from 'angularx-qrcode';
 import { DeviceMotion, DeviceMotionAccelerationData } from '@ionic-native/device-motion/ngx';
+import { CallNumber } from '@ionic-native/call-number/ngx';
 firebase.initializeApp(environment.firebase);
 @NgModule({
   declarations: [AppComponent],
@@ -36,8 +37,9 @@ firebase.initializeApp(environment.firebase);
     SplashScreen,
     AuthenticationService,
     Geolocation,
-     DeviceMotion,
-     BarcodeScanner,
+    DeviceMotion,
+    BarcodeScanner,
+    CallNumber,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
