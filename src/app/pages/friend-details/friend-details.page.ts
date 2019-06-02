@@ -5,6 +5,7 @@ import { Map, latLng, tileLayer, Layer, marker, icon } from 'leaflet';
 import { ToastService } from 'src/app/services/toast/toast.service';
 import { userInfo } from 'os';
 import { UserService } from 'src/app/services/user/user.service';
+import { CallNumber } from '@ionic-native/call-number/ngx';
 @Component({
   selector: 'app-friend-details',
   templateUrl: './friend-details.page.html',
@@ -19,7 +20,8 @@ export class FriendDetailsPage implements OnInit {
     private activatedRoute: ActivatedRoute,
     private friendsService: FriendsService,
     private userService: UserService,
-    private toast: ToastService) { }
+    private toast: ToastService,
+    private callNumber: CallNumber) { }
 
   ngOnInit() {
     this.id = this.activatedRoute.snapshot.paramMap.get('id')
@@ -33,13 +35,23 @@ export class FriendDetailsPage implements OnInit {
         this.PointUserMarker()
       })
   }
+  
+  OnOperatorCall(){
+    this.callNumber.callNumber("+48577839232", true)
+    .then(res => this.toast.present('Launched dialer!'))
+    .catch(err => this.toast.present('Error launching dialer'
+    ));
+  }
+
   Loadmap() {
     return new Promise((resolve, reject)=>{
       this.friendsService.getByID(this.id).then(user => {
         this.userInfo = user
         this.map = new Map('fmap').setView(this.userInfo.geo, 12);
-        tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', 
-        { maxZoom: 18, }).addTo(this.map);
+        tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a> hosted by <a href="https://openstreetmap.fr/" target="_blank">OpenStreetMap France</a>'
+          }).addTo(this.map);
         resolve()
       })
     }) 

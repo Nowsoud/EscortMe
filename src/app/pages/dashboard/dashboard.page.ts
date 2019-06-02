@@ -29,14 +29,13 @@ export class DashboardPage implements OnInit {
 
     this.geolocation.watchPosition().subscribe((data) => {
       if (data.coords) {
-        let geo = [data.coords.latitude, data.coords.longitude];
-        this.userService.updateUserGeo(geo);
+        let geo = [data.coords.latitude, data.coords.longitude]
         this.PointUserMarker(geo)
+        this.userService.updateUserGeo(geo)
+      }else{
+        this.toast.present((data as any).message)
       }
-      else {
-        this.toast.present("Geo data not found")
-      }
-    });
+    },error=>this.toast.present(error.message));
 
     this.stateProvider.watchState().subscribe(data => {
       let stateId = new RandomForest().predict(data);
@@ -54,8 +53,10 @@ export class DashboardPage implements OnInit {
 
   Loadmap(geo) {
     this.map = new Map('map').setView(geo, 12);
-    tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
-      { maxZoom: 18, }).addTo(this.map);
+    tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+	    maxZoom: 19,
+	    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a> hosted by <a href="https://openstreetmap.fr/" target="_blank">OpenStreetMap France</a>'
+      }).addTo(this.map);
   }
 
   PointUserMarker(geo) {

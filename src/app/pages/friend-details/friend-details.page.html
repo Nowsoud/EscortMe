@@ -1,7 +1,4 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>{{userInfo?.name}}</ion-title>
-  </ion-toolbar>
 </ion-header>
 
 <ion-content>
@@ -27,13 +24,18 @@
     <h3>Your friend in the danger</h3>
     <p *ngIf="userInfo?.state == 'on table'&&userInfo?.security_status == 'danger'">Man down! Contact the police.</p>
   </ion-label>
-  <p slot="end">Contact friend</p>
-  <ion-icon slot="end" name="mic"></ion-icon>
-  
-  <p slot="end">Contact operator</p>
-  <ion-icon slot="end" name="call"></ion-icon>
 </ion-item>
 
+    <!--ion-button disabled fill="outline">
+        Contact friend
+        <ion-icon slot="end" name="mic"></ion-icon>
+    </ion-button-->
+  
+  <ion-button expand="full" *ngIf="userInfo?.security_status == 'danger'" (click)="OnOperatorCall()" color="dark" >
+    Contact operator
+    <ion-icon slot="end" name="call"></ion-icon>
+  </ion-button>
+  
 <ion-card>
   <ion-card-content style="padding: 0">
     <div id="fmap" style="height:72vh;"></div>
